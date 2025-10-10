@@ -1,0 +1,460 @@
+{
+  "indicators": {
+    "BTC/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:50.156459"
+    },
+    "ETH/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:50.517551"
+    },
+    "BNB/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:50.823979"
+    },
+    "ADA/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:51.064762"
+    },
+    "SOL/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:51.303115"
+    },
+    "MATIC/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "alcista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:51.644595"
+    },
+    "DOT/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "alcista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:51.953473"
+    },
+    "AVAX/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:52.260759"
+    },
+    "XRP/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:52.568751"
+    },
+    "DOGE/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:52.876490"
+    },
+    "LINK/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:53.184698"
+    },
+    "UNI/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:53.428193"
+    },
+    "LTC/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "alcista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:53.798584"
+    },
+    "ATOM/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:54.104563"
+    },
+    "NEAR/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "alcista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:54.412594"
+    },
+    "FTM/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:54.719229"
+    },
+    "ALGO/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:55.010515"
+    },
+    "VET/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:55.252709"
+    },
+    "SNX/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "alcista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:55.498627"
+    },
+    "TAO/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "alcista",
+        "macd": "alcista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:56.256724"
+    },
+    "SHIB/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:56.562002"
+    },
+    "PEPE/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:56.867389"
+    },
+    "FLOKI/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:57.110241"
+    },
+    "BONK/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:57.890555"
+    },
+    "WIF/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:58.129951"
+    },
+    "ARB/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:58.403844"
+    },
+    "OP/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:58.714072"
+    },
+    "SUI/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:58.956433"
+    },
+    "SEI/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:59.225661"
+    },
+    "TIA/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:59.531984"
+    },
+    "AAVE/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:48:59.839913"
+    },
+    "COMP/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "normal",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:49:00.081696"
+    },
+    "SAND/USDC": {
+      "indicators": {
+        "rsi": "neutral",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:49:00.344615"
+    },
+    "AXS/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:49:00.649117"
+    },
+    "FET/USDC": {
+      "indicators": {
+        "rsi": "sobreventa",
+        "ema": "bajista",
+        "macd": "bajista",
+        "bb": "rebote_esperado",
+        "stoch": "neutral"
+      },
+      "buy": false,
+      "sell": false,
+      "confidence": 0.0,
+      "timestamp": "2025-10-10T19:49:00.965764"
+    }
+  },
+  "timestamp": "2025-10-10T19:49:00.966603"
+}
