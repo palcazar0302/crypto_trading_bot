@@ -30,61 +30,61 @@ class Config:
     
     # Configuración de trading
     TIMEFRAME = '1h'
-SYMBOLS = [
-    # Top 10 criptomonedas principales (siempre disponibles)
-    'BTC/USDC',
-    'ETH/USDC',
-    'BNB/USDC',
-    'XRP/USDC',    # Ripple
-    'ADA/USDC',
-    'SOL/USDC',
-    'DOGE/USDC',   # Dogecoin
-    'TRX/USDC',    # TRON
-    'LINK/USDC',   # Chainlink
-    'MATIC/USDC',
-    
-    # Criptomonedas estables y líquidas
-    'DOT/USDC',
-    'LTC/USDC',    # Litecoin
-    'AVAX/USDC',
-    'UNI/USDC',    # Uniswap
-    'ATOM/USDC',   # Cosmos
-    'NEAR/USDC',   # Near Protocol
-    'ALGO/USDC',   # Algorand
-    'VET/USDC',    # VeChain
-    'ICP/USDC',    # Internet Computer
-    'FIL/USDC',    # Filecoin
-    
-    # Memecoins populares (alta volatilidad)
-    'SHIB/USDC',   # Shiba Inu
-    'PEPE/USDC',   # Pepe
-    'FLOKI/USDC',  # Floki
-    'BONK/USDC',   # Bonk
-    'WIF/USDC',    # Dogwifhat
-    
-    # Layer 1 y Layer 2
-    'ARB/USDC',    # Arbitrum
-    'OP/USDC',     # Optimism
-    'SUI/USDC',    # Sui
-    'APT/USDC',    # Aptos
-    
-    # DeFi principales
-    'AAVE/USDC',   # Aave
-    'COMP/USDC',   # Compound
-    'CRV/USDC',    # Curve
-    'MKR/USDC',    # Maker
-    
-    # Gaming y Metaverse
-    'SAND/USDC',   # The Sandbox
-    'AXS/USDC',    # Axie Infinity
-    'MANA/USDC',   # Decentraland
-    'GALA/USDC',   # Gala
-    
-    # AI y Tecnología
-    'FET/USDC',    # Fetch.ai
-    'AGIX/USDC',   # SingularityNET
-    'OCEAN/USDC'   # Ocean Protocol
-]
+    SYMBOLS = [
+        # Top 10 criptomonedas principales (siempre disponibles)
+        'BTC/USDC',
+        'ETH/USDC',
+        'BNB/USDC',
+        'XRP/USDC',    # Ripple
+        'ADA/USDC',
+        'SOL/USDC',
+        'DOGE/USDC',   # Dogecoin
+        'TRX/USDC',    # TRON
+        'LINK/USDC',   # Chainlink
+        'MATIC/USDC',
+        
+        # Criptomonedas estables y líquidas
+        'DOT/USDC',
+        'LTC/USDC',    # Litecoin
+        'AVAX/USDC',
+        'UNI/USDC',    # Uniswap
+        'ATOM/USDC',   # Cosmos
+        'NEAR/USDC',   # Near Protocol
+        'ALGO/USDC',   # Algorand
+        'VET/USDC',    # VeChain
+        'ICP/USDC',    # Internet Computer
+        'FIL/USDC',    # Filecoin
+        
+        # Memecoins populares (alta volatilidad)
+        'SHIB/USDC',   # Shiba Inu
+        'PEPE/USDC',   # Pepe
+        'FLOKI/USDC',  # Floki
+        'BONK/USDC',   # Bonk
+        'WIF/USDC',    # Dogwifhat
+        
+        # Layer 1 y Layer 2
+        'ARB/USDC',    # Arbitrum
+        'OP/USDC',     # Optimism
+        'SUI/USDC',    # Sui
+        'APT/USDC',    # Aptos
+        
+        # DeFi principales
+        'AAVE/USDC',   # Aave
+        'COMP/USDC',   # Compound
+        'CRV/USDC',    # Curve
+        'MKR/USDC',    # Maker
+        
+        # Gaming y Metaverse
+        'SAND/USDC',   # The Sandbox
+        'AXS/USDC',    # Axie Infinity
+        'MANA/USDC',   # Decentraland
+        'GALA/USDC',   # Gala
+        
+        # AI y Tecnología
+        'FET/USDC',    # Fetch.ai
+        'AGIX/USDC',   # SingularityNET
+        'OCEAN/USDC'   # Ocean Protocol
+    ]
     
     # Indicadores técnicos
     RSI_PERIOD = 14
