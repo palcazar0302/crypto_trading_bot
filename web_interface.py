@@ -927,7 +927,7 @@ async def get_dashboard():
                         signalText = 'VENTA';
                     }
                     
-                    const confidence = (data.confidence * 100).toFixed(0);
+                    const confidence = data.confidence.toFixed(0);
                     let confidenceClass = 'confidence-low';
                     if (confidence >= 80) confidenceClass = 'confidence-high';
                     else if (confidence >= 60) confidenceClass = 'confidence-medium';

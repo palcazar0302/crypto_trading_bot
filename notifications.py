@@ -63,7 +63,7 @@ class NotificationManager:
         try:
             emoji = "🚀" if signal['buy'] else "📉"
             action = "COMPRA" if signal['buy'] else "VENTA"
-            confidence = signal.get('confidence', 0) * 100
+            confidence = signal.get('confidence', 0)
             
             indicators_text = ""
             if 'indicators' in signal:
