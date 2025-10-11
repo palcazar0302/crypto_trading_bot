@@ -199,6 +199,7 @@ class CryptoTradingBot:
             
             # Log de señales
             log_signal(self.logger, symbol, signals)
+            self.logger.info(f"✅ Señal loggeada para {symbol}, continuando...")
             
             # Obtener precio actual
             ticker = self.exchange.get_ticker(symbol)
@@ -219,6 +220,8 @@ class CryptoTradingBot:
                 self._execute_sell_order(symbol, current_price, signals)
             else:
                 self.logger.info(f"ℹ️ No se ejecuta trade para {symbol}: Buy={signals.get('buy', False)}, Sell={signals.get('sell', False)}, Confidence={signals.get('confidence', 0)}")
+            
+            self.logger.info(f"✅ Análisis completado para {symbol}")
                 
         except Exception as e:
             self.logger.error(f"🚨 ERROR CRÍTICO analizando {symbol}: {str(e)}")
