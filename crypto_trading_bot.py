@@ -209,8 +209,10 @@ class CryptoTradingBot:
             
             # Ejecutar trades basados en señales
             if signals['buy'] and signals['confidence'] > 40:  # Confianza en porcentaje (40%)
+                self.logger.info(f"💰 Intentando ejecutar compra para {symbol} - Confianza: {signals['confidence']}%, Balance: {account_balance}")
                 self._execute_buy_order(symbol, current_price, account_balance, signals)
             elif signals['sell'] and signals['confidence'] > 40:  # Confianza en porcentaje (40%)
+                self.logger.info(f"💰 Intentando ejecutar venta para {symbol} - Confianza: {signals['confidence']}%")
                 self._execute_sell_order(symbol, current_price, signals)
                 
         except Exception as e:
@@ -219,6 +221,8 @@ class CryptoTradingBot:
     def _execute_buy_order(self, symbol: str, price: float, account_balance: float, signals: Dict):
         """Ejecutar orden de compra"""
         try:
+            self.logger.info(f"🚀 Iniciando ejecución de compra para {symbol} - Precio: {price}, Balance: {account_balance}")
+            
             # Calcular stop loss y take profit
             stop_loss = price * (1 - Config.STOP_LOSS_PERCENTAGE / 100)
             take_profit = price * (1 + Config.TARGET_PROFIT_PERCENTAGE / 100)
@@ -227,6 +231,8 @@ class CryptoTradingBot:
             position_size = self.risk_manager.calculate_position_size(
                 account_balance, Config.RISK_PERCENTAGE, price, stop_loss
             )
+            
+            self.logger.info(f"📊 Tamaño de posición calculado para {symbol}: {position_size}")
             
             if position_size == 0:
                 self.logger.warning(f"⚠️ Tamaño de posición calculado como 0 para {symbol}")
