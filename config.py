@@ -80,10 +80,8 @@ class Config:
         'MANA/USDC',   # Decentraland
         'GALA/USDC',   # Gala
         
-        # AI y Tecnología
-        'FET/USDC',    # Fetch.ai
-        'AGIX/USDC',   # SingularityNET
-        'OCEAN/USDC'   # Ocean Protocol
+        # AI y Tecnología (solo las más estables)
+        'RNDR/USDC'    # Render Token
     ]
     
     # Indicadores técnicos
