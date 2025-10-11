@@ -198,8 +198,12 @@ class CryptoTradingBot:
             signals = self.ta.get_trading_signals(df)
             
             # Log de señales
-            log_signal(self.logger, symbol, signals)
-            self.logger.info(f"✅ Señal loggeada para {symbol}, continuando...")
+            try:
+                log_signal(self.logger, symbol, signals)
+                self.logger.info(f"✅ Señal loggeada para {symbol}, continuando...")
+            except Exception as log_error:
+                self.logger.error(f"🚨 Error en log_signal para {symbol}: {log_error}")
+                self.logger.info(f"🎯 {symbol}: {'COMPRA' if signals.get('buy') else 'VENTA' if signals.get('sell') else 'Sin señales'} - Confianza: {signals.get('confidence', 0)}")
             
             # Obtener precio actual
             ticker = self.exchange.get_ticker(symbol)
