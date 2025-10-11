@@ -204,7 +204,10 @@ class CryptoTradingBot:
             ticker = self.exchange.get_ticker(symbol)
             current_price = ticker.get('last', 0)
             
+            self.logger.info(f"🔍 DEBUG {symbol}: Buy={signals.get('buy', False)}, Sell={signals.get('sell', False)}, Confidence={signals.get('confidence', 0)}, Price={current_price}, Balance={account_balance}")
+            
             if current_price == 0:
+                self.logger.warning(f"⚠️ Precio 0 para {symbol}")
                 return
             
             # Ejecutar trades basados en señales
@@ -214,6 +217,8 @@ class CryptoTradingBot:
             elif signals['sell'] and signals['confidence'] > 40:  # Confianza en porcentaje (40%)
                 self.logger.info(f"💰 Intentando ejecutar venta para {symbol} - Confianza: {signals['confidence']}%")
                 self._execute_sell_order(symbol, current_price, signals)
+            else:
+                self.logger.info(f"ℹ️ No se ejecuta trade para {symbol}: Buy={signals.get('buy', False)}, Sell={signals.get('sell', False)}, Confidence={signals.get('confidence', 0)}")
                 
         except Exception as e:
             log_error(self.logger, e, f"Error analizando {symbol}")
