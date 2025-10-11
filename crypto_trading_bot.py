@@ -182,6 +182,7 @@ class CryptoTradingBot:
             return False
     
     def _analyze_symbol(self, symbol: str, account_balance: float):
+        self.logger.info(f"🔥 VERSIÓN NUEVA - Analizando {symbol}")
         """Analizar símbolo y ejecutar trades si es necesario"""
         try:
             # Obtener datos OHLCV
