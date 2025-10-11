@@ -208,9 +208,9 @@ class CryptoTradingBot:
                 return
             
             # Ejecutar trades basados en señales
-            if signals['buy'] and signals['confidence'] > 0.4:  # Reducido de 0.6 a 0.4 para pruebas
+            if signals['buy'] and signals['confidence'] > 40:  # Confianza en porcentaje (40%)
                 self._execute_buy_order(symbol, current_price, account_balance, signals)
-            elif signals['sell'] and signals['confidence'] > 0.4:  # Reducido de 0.6 a 0.4 para pruebas
+            elif signals['sell'] and signals['confidence'] > 40:  # Confianza en porcentaje (40%)
                 self._execute_sell_order(symbol, current_price, signals)
                 
         except Exception as e:

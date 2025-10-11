@@ -166,14 +166,15 @@ class TechnicalAnalysis:
             # Determinar señal final
             total_signals = buy_signals + sell_signals
             if total_signals > 0:
-                confidence = max(buy_signals, sell_signals) / total_signals
+                # Calcular confianza como porcentaje de señales a favor
+                confidence = (max(buy_signals, sell_signals) / total_signals) * 100
                 
-                if buy_signals > sell_signals and buy_signals >= 2:  # Mínimo 2 señales de compra (reducido para pruebas)
+                if buy_signals > sell_signals and buy_signals >= 2:  # Mínimo 2 señales de compra
                     signals['buy'] = True
-                    signals['confidence'] = confidence * 100  # Convertir a porcentaje
-                elif sell_signals > buy_signals and sell_signals >= 2:  # Mínimo 2 señales de venta (reducido para pruebas)
+                    signals['confidence'] = min(confidence, 100)  # Máximo 100%
+                elif sell_signals > buy_signals and sell_signals >= 2:  # Mínimo 2 señales de venta
                     signals['sell'] = True
-                    signals['confidence'] = confidence * 100  # Convertir a porcentaje
+                    signals['confidence'] = min(confidence, 100)  # Máximo 100%
             
             return signals
             

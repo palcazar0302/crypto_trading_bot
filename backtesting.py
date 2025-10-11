@@ -123,7 +123,7 @@ class BacktestingEngine:
                 signals = self.ta.get_trading_signals(current_data)
                 
                 # Si no hay posición y señal de compra
-                if position is None and signals['buy'] and signals['confidence'] > 0.6:
+                if position is None and signals['buy'] and signals['confidence'] > 40:  # Confianza en porcentaje
                     # Calcular tamaño de posición
                     stop_loss = current_price * (1 - Config.STOP_LOSS_PERCENTAGE / 100)
                     position_size = self._calculate_position_size(capital, current_price, stop_loss)
@@ -185,7 +185,7 @@ class BacktestingEngine:
                         position = None
                     
                     # Verificar señal de venta
-                    elif signals['sell'] and signals['confidence'] > 0.6:
+                    elif signals['sell'] and signals['confidence'] > 40:  # Confianza en porcentaje
                         pnl = (current_price - position['entry_price']) * position['amount']
                         capital += position['amount'] * current_price
                         
