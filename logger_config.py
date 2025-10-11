@@ -96,7 +96,12 @@ def log_trade(logger: logging.Logger, trade_type: str, symbol: str, amount: floa
 
 def log_signal(logger: logging.Logger, symbol: str, signal: dict):
     """Log específico para señales de trading"""
-    logger.info(f"SEÑAL: {symbol} - {signal}")
+    if signal.get('buy', False):
+        logger.info(f"🎯 {symbol}: COMPRA - Confianza: {signal.get('confidence', 0)}")
+    elif signal.get('sell', False):
+        logger.info(f"🎯 {symbol}: VENTA - Confianza: {signal.get('confidence', 0)}")
+    else:
+        logger.info(f"📊 {symbol}: Sin señales - Confianza: {signal.get('confidence', 0)}")
 
 def log_error(logger: logging.Logger, error: Exception, context: str = ''):
     """Log específico para errores"""

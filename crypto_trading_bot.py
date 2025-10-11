@@ -221,7 +221,10 @@ class CryptoTradingBot:
                 self.logger.info(f"ℹ️ No se ejecuta trade para {symbol}: Buy={signals.get('buy', False)}, Sell={signals.get('sell', False)}, Confidence={signals.get('confidence', 0)}")
                 
         except Exception as e:
-            log_error(self.logger, e, f"Error analizando {symbol}")
+            self.logger.error(f"🚨 ERROR CRÍTICO analizando {symbol}: {str(e)}")
+            self.logger.error(f"🚨 Tipo de error: {type(e).__name__}")
+            import traceback
+            self.logger.error(f"🚨 Traceback completo: {traceback.format_exc()}")
     
     def _execute_buy_order(self, symbol: str, price: float, account_balance: float, signals: Dict):
         """Ejecutar orden de compra"""
