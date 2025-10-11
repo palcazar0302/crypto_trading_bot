@@ -168,12 +168,12 @@ class TechnicalAnalysis:
             if total_signals > 0:
                 confidence = max(buy_signals, sell_signals) / total_signals
                 
-                if buy_signals > sell_signals and buy_signals >= 3:  # Mínimo 3 señales de compra
+                if buy_signals > sell_signals and buy_signals >= 2:  # Mínimo 2 señales de compra (reducido para pruebas)
                     signals['buy'] = True
-                    signals['confidence'] = confidence
-                elif sell_signals > buy_signals and sell_signals >= 3:  # Mínimo 3 señales de venta
+                    signals['confidence'] = confidence * 100  # Convertir a porcentaje
+                elif sell_signals > buy_signals and sell_signals >= 2:  # Mínimo 2 señales de venta (reducido para pruebas)
                     signals['sell'] = True
-                    signals['confidence'] = confidence
+                    signals['confidence'] = confidence * 100  # Convertir a porcentaje
             
             return signals
             
