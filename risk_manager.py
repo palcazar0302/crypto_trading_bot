@@ -3,9 +3,11 @@ Gestor de riesgo para el bot de trading
 """
 import logging
 import json
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 from config import Config
+import traceback
 
 class RiskManager:
     def __init__(self):
@@ -15,6 +17,21 @@ class RiskManager:
         self.open_positions = {}
         self.daily_trades = 0
         self.max_daily_trades = 10
+        self.closed_trades = []
+        
+        # Archivos de persistencia
+        self.data_dir = "data"
+        self.positions_file = os.path.join(self.data_dir, "open_positions.json")
+        self.trades_file = os.path.join(self.data_dir, "trades_history.json")
+        self.metrics_file = os.path.join(self.data_dir, "daily_metrics.json")
+        
+        # Crear directorio si no existe
+        os.makedirs(self.data_dir, exist_ok=True)
+        
+        # Cargar datos al inicializar
+        self._load_positions()
+        self._load_metrics()
+        self._load_trades_history()
         
     def calculate_position_size(self, account_balance: float, risk_percentage: float, 
                               entry_price: float, stop_loss_price: float) -> float:
@@ -75,14 +92,18 @@ class RiskManager:
                 validation['reason'] = f'Pérdida diaria máxima alcanzada ({Config.MAX_DAILY_LOSS}%)'
                 return validation
             
-            # Verificar tamaño mínimo de orden
-            min_order_value = 10.0  # $10 USDT mínimo
+            # Verificar tamaño mínimo de orden (ajustado para Binance)
+            min_order_value = 5.0  # $5 USDT mínimo (algunos pares permiten desde $5)
             order_value = amount * price
             
             if order_value < min_order_value:
                 validation['valid'] = False
                 validation['reason'] = f'Valor de orden muy pequeño (mínimo ${min_order_value})'
                 return validation
+            
+            # Advertencia si el valor es muy bajo pero válido
+            if order_value < 10.0:
+                self.logger.warning(f"⚠️ Orden pequeña: ${order_value:.2f} para {symbol}")
             
             return validation
             
@@ -113,10 +134,15 @@ class RiskManager:
             self.open_positions[symbol] = position
             self.daily_trades += 1
             
-            self.logger.info(f"Posición agregada: {symbol} - {side} - Cantidad: {amount} - Precio: {entry_price}")
+            self.logger.info(f"✅ Posición agregada: {symbol} - {side} - Cantidad: {amount} - Precio: {entry_price}")
+            
+            # Guardar inmediatamente
+            self._save_positions()
+            self._save_metrics()
             
         except Exception as e:
             self.logger.error(f"Error al agregar posición: {e}")
+            self.logger.error(traceback.format_exc())
     
     def update_position_price(self, symbol: str, current_price: float):
         """Actualizar precio actual de una posición"""
@@ -180,6 +206,7 @@ class RiskManager:
         """Cerrar posición y calcular PnL"""
         try:
             if symbol not in self.open_positions:
+                self.logger.warning(f"⚠️ Intento de cerrar posición inexistente: {symbol}")
                 return {'success': False, 'reason': 'Posición no encontrada'}
             
             position = self.open_positions[symbol]
@@ -190,31 +217,55 @@ class RiskManager:
             else:
                 pnl = (position['entry_price'] - exit_price) * position['amount']
             
+            pnl_percentage = (pnl / (position['entry_price'] * position['amount'])) * 100
+            
             # Actualizar estadísticas
             self.total_pnl += pnl
             self.daily_pnl += pnl
             
-            # Marcar posición como cerrada
-            position['status'] = 'closed'
-            position['exit_price'] = exit_price
-            position['exit_time'] = datetime.now()
-            position['exit_reason'] = exit_reason
-            position['realized_pnl'] = pnl
+            # Calcular duración
+            entry_time = position.get('entry_time', datetime.now())
+            exit_time = datetime.now()
+            duration_minutes = (exit_time - entry_time).total_seconds() / 60
+            
+            # Crear registro para historial
+            trade_record = {
+                'symbol': symbol,
+                'side': position['side'],
+                'entry_price': position['entry_price'],
+                'exit_price': exit_price,
+                'amount': position['amount'],
+                'pnl': round(pnl, 2),
+                'pnl_percentage': round(pnl_percentage, 2),
+                'reason': exit_reason,
+                'duration_minutes': int(duration_minutes),
+                'timestamp': exit_time.isoformat()
+            }
+            
+            # Agregar a lista de trades cerrados
+            self.closed_trades.append(trade_record)
             
             # Remover de posiciones abiertas
             del self.open_positions[symbol]
             
-            self.logger.info(f"Posición cerrada: {symbol} - PnL: {pnl:.2f} - Razón: {exit_reason}")
+            self.logger.info(f"✅ Posición cerrada: {symbol} - PnL: ${pnl:.2f} ({pnl_percentage:.2f}%) - Razón: {exit_reason}")
+            
+            # Guardar inmediatamente
+            self._save_positions()
+            self._save_trades_history()
+            self._save_metrics()
             
             return {
                 'success': True,
                 'pnl': pnl,
+                'pnl_percentage': pnl_percentage,
                 'total_pnl': self.total_pnl,
                 'daily_pnl': self.daily_pnl
             }
             
         except Exception as e:
             self.logger.error(f"Error al cerrar posición: {e}")
+            self.logger.error(traceback.format_exc())
             return {'success': False, 'reason': str(e)}
     
     def calculate_portfolio_metrics(self, account_balance: float) -> Dict:
@@ -243,7 +294,8 @@ class RiskManager:
         """Reiniciar métricas diarias"""
         self.daily_pnl = 0.0
         self.daily_trades = 0
-        self.logger.info("Métricas diarias reiniciadas")
+        self.logger.info("🔄 Métricas diarias reiniciadas")
+        self._save_metrics()
     
     def get_risk_report(self) -> Dict:
         """Generar reporte de riesgo"""
@@ -262,5 +314,214 @@ class RiskManager:
         except Exception as e:
             self.logger.error(f"Error al generar reporte de riesgo: {e}")
             return {}
+    
+    def _save_json_safe(self, filepath: str, data: dict, backup: bool = True):
+        """Guardar JSON de forma segura con backup"""
+        try:
+            # Crear backup del archivo actual si existe
+            if backup and os.path.exists(filepath):
+                backup_file = f"{filepath}.backup"
+                try:
+                    import shutil
+                    shutil.copy2(filepath, backup_file)
+                except Exception as e:
+                    self.logger.warning(f"No se pudo crear backup: {e}")
+            
+            # Guardar en archivo temporal primero
+            temp_file = f"{filepath}.tmp"
+            with open(temp_file, 'w') as f:
+                json.dump(data, f, indent=2, default=str)
+            
+            # Validar que el JSON es válido
+            with open(temp_file, 'r') as f:
+                json.load(f)
+            
+            # Si la validación pasa, renombrar el archivo temporal
+            if os.path.exists(filepath):
+                os.remove(filepath)
+            os.rename(temp_file, filepath)
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error guardando JSON {filepath}: {e}")
+            self.logger.error(traceback.format_exc())
+            # Limpiar archivo temporal si existe
+            if os.path.exists(temp_file):
+                try:
+                    os.remove(temp_file)
+                except:
+                    pass
+            return False
+    
+    def _load_json_safe(self, filepath: str) -> dict:
+        """Cargar JSON de forma segura con manejo de errores"""
+        try:
+            if not os.path.exists(filepath):
+                return {}
+            
+            with open(filepath, 'r') as f:
+                data = json.load(f)
+            
+            return data
+            
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Error cargando JSON corrupto {filepath}: {e}")
+            
+            # Intentar cargar desde backup
+            backup_file = f"{filepath}.backup"
+            if os.path.exists(backup_file):
+                try:
+                    self.logger.info(f"Intentando cargar desde backup: {backup_file}")
+                    with open(backup_file, 'r') as f:
+                        data = json.load(f)
+                    self.logger.info("✅ Backup cargado exitosamente")
+                    return data
+                except Exception as e2:
+                    self.logger.error(f"Backup también está corrupto: {e2}")
+            
+            # Si todo falla, mover archivo corrupto y empezar limpio
+            corrupto_file = f"{filepath}.corrupto_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            try:
+                os.rename(filepath, corrupto_file)
+                self.logger.warning(f"Archivo corrupto movido a: {corrupto_file}")
+            except:
+                pass
+            
+            return {}
+            
+        except Exception as e:
+            self.logger.error(f"Error inesperado cargando {filepath}: {e}")
+            return {}
+    
+    def _save_positions(self):
+        """Guardar posiciones abiertas"""
+        try:
+            # Solo guardar posiciones realmente abiertas
+            positions_to_save = {}
+            for symbol, pos in self.open_positions.items():
+                if pos.get('status') == 'open':
+                    # Convertir datetime a string
+                    pos_copy = pos.copy()
+                    if 'entry_time' in pos_copy and isinstance(pos_copy['entry_time'], datetime):
+                        pos_copy['entry_time'] = pos_copy['entry_time'].isoformat()
+                    positions_to_save[symbol] = pos_copy
+            
+            self._save_json_safe(self.positions_file, positions_to_save)
+            self.logger.debug(f"💾 Posiciones guardadas: {len(positions_to_save)}")
+            
+        except Exception as e:
+            self.logger.error(f"Error guardando posiciones: {e}")
+            self.logger.error(traceback.format_exc())
+    
+    def _load_positions(self):
+        """Cargar posiciones abiertas"""
+        try:
+            data = self._load_json_safe(self.positions_file)
+            
+            # Filtrar solo posiciones realmente abiertas
+            open_count = 0
+            for symbol, pos in data.items():
+                if pos.get('status') == 'open' or 'status' not in pos:
+                    # Convertir string a datetime
+                    if 'entry_time' in pos and isinstance(pos['entry_time'], str):
+                        try:
+                            pos['entry_time'] = datetime.fromisoformat(pos['entry_time'])
+                        except:
+                            pos['entry_time'] = datetime.now()
+                    
+                    self.open_positions[symbol] = pos
+                    open_count += 1
+                else:
+                    self.logger.info(f"⚠️ Posición cerrada encontrada en archivo: {symbol}, se ignorará")
+            
+            if open_count > 0:
+                self.logger.info(f"✅ {open_count} posiciones abiertas cargadas")
+            
+        except Exception as e:
+            self.logger.error(f"Error cargando posiciones: {e}")
+            self.logger.error(traceback.format_exc())
+            self.open_positions = {}
+    
+    def _save_trades_history(self):
+        """Guardar historial de trades"""
+        try:
+            # Cargar historial existente
+            existing = self._load_json_safe(self.trades_file)
+            if not isinstance(existing, list):
+                existing = []
+            
+            # Agregar nuevos trades cerrados
+            all_trades = existing + self.closed_trades
+            
+            # Limpiar duplicados (por timestamp)
+            seen = set()
+            unique_trades = []
+            for trade in all_trades:
+                timestamp = trade.get('timestamp', '')
+                if timestamp and timestamp not in seen:
+                    seen.add(timestamp)
+                    unique_trades.append(trade)
+            
+            # Ordenar por timestamp descendente (más reciente primero)
+            unique_trades.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+            
+            # Guardar
+            self._save_json_safe(self.trades_file, unique_trades)
+            self.logger.debug(f"💾 Historial guardado: {len(unique_trades)} trades")
+            
+            # Limpiar lista temporal
+            self.closed_trades = []
+            
+        except Exception as e:
+            self.logger.error(f"Error guardando historial: {e}")
+            self.logger.error(traceback.format_exc())
+    
+    def _load_trades_history(self):
+        """Cargar historial de trades (solo para estadísticas)"""
+        try:
+            trades = self._load_json_safe(self.trades_file)
+            if isinstance(trades, list):
+                self.logger.info(f"📊 {len(trades)} trades en historial")
+        except Exception as e:
+            self.logger.error(f"Error cargando historial: {e}")
+    
+    def _save_metrics(self):
+        """Guardar métricas diarias"""
+        try:
+            metrics = {
+                'daily_pnl': self.daily_pnl,
+                'total_pnl': self.total_pnl,
+                'daily_trades': self.daily_trades,
+                'last_reset': datetime.now().isoformat()
+            }
+            self._save_json_safe(self.metrics_file, metrics)
+            
+        except Exception as e:
+            self.logger.error(f"Error guardando métricas: {e}")
+    
+    def _load_metrics(self):
+        """Cargar métricas diarias"""
+        try:
+            metrics = self._load_json_safe(self.metrics_file)
+            
+            if metrics:
+                # Verificar si es del mismo día
+                last_reset = metrics.get('last_reset', '')
+                if last_reset:
+                    last_date = datetime.fromisoformat(last_reset).date()
+                    today = datetime.now().date()
+                    
+                    if last_date == today:
+                        self.daily_pnl = metrics.get('daily_pnl', 0.0)
+                        self.daily_trades = metrics.get('daily_trades', 0)
+                        self.logger.info(f"📊 Métricas del día cargadas: PnL={self.daily_pnl:.2f}, Trades={self.daily_trades}")
+                    else:
+                        self.logger.info("🔄 Nuevo día detectado, métricas reiniciadas")
+                
+                self.total_pnl = metrics.get('total_pnl', 0.0)
+                
+        except Exception as e:
+            self.logger.error(f"Error cargando métricas: {e}")
 
 
