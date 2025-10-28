@@ -1162,6 +1162,9 @@ async def get_portfolio():
     try:
         from exchange_manager import ExchangeManager
         
+        # Obtener balance inicial de config
+        initial_balance = Config.INVESTMENT_AMOUNT
+        
         # Obtener balance real de Binance
         exchange = ExchangeManager()
         cash_balance = exchange.get_usdc_balance()
@@ -1190,7 +1193,6 @@ async def get_portfolio():
             
             # Calcular totales
             total_value = cash_balance + positions_value
-            initial_balance = Config.INVESTMENT_AMOUNT
             total_pnl = rm.total_pnl
             total_pnl_percentage = (total_pnl / initial_balance * 100) if initial_balance > 0 else 0
             
@@ -1225,7 +1227,7 @@ async def get_portfolio():
                 'cash': cash_balance,
                 'positions_value': 0,
                 'total_value': cash_balance,
-                'initial_balance': Config.INVESTMENT_AMOUNT,
+                'initial_balance': initial_balance,
                 'total_pnl': 0,
                 'total_pnl_percentage': 0,
                 'daily_pnl': 0,
@@ -1239,13 +1241,17 @@ async def get_portfolio():
         logger.error(f"Error obteniendo portafolio: {e}")
         import traceback
         logger.error(traceback.format_exc())
-        from config import Config
-        initial_balance = float(Config.INVESTMENT_AMOUNT)
+        # Usar config ya importado al inicio
+        fallback_balance = 1000.0
+        try:
+            fallback_balance = float(Config.INVESTMENT_AMOUNT)
+        except:
+            pass
         return {
-            'cash': initial_balance,
+            'cash': fallback_balance,
             'positions_value': 0,
-            'total_value': initial_balance,
-            'initial_balance': initial_balance,
+            'total_value': fallback_balance,
+            'initial_balance': fallback_balance,
             'total_pnl': 0,
             'total_pnl_percentage': 0,
             'daily_pnl': 0,
