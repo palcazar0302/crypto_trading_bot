@@ -1160,33 +1160,85 @@ async def get_logs():
 async def get_portfolio():
     """Obtener balance y resumen del portafolio"""
     try:
-        from portfolio_tracker import get_portfolio_tracker
         from exchange_manager import ExchangeManager
         
-        # Intentar obtener balance real de Binance
-        try:
-            exchange = ExchangeManager()
-            real_balance = exchange.get_usdc_balance()
-            
-            # Si hay balance real, usarlo
-            if real_balance > 0:
-                tracker = get_portfolio_tracker()
-                summary = tracker.get_portfolio_summary()
-                # Actualizar con balance real
-                summary['cash'] = real_balance
-                summary['total_value'] = real_balance + summary.get('positions_value', 0)
-                initial = summary.get('initial_balance', 100)
-                summary['total_pnl'] = summary['total_value'] - initial
-                summary['total_pnl_percentage'] = (summary['total_pnl'] / initial * 100) if initial > 0 else 0
-                return summary
-        except Exception as e:
-            logger.warning(f"No se pudo obtener balance real: {e}")
+        # Obtener balance real de Binance
+        exchange = ExchangeManager()
+        cash_balance = exchange.get_usdc_balance()
         
-        # Fallback a balance simulado
-        tracker = get_portfolio_tracker()
-        return tracker.get_portfolio_summary()
+        # Obtener datos del RiskManager del bot
+        if bot_instance and hasattr(bot_instance, 'risk_manager'):
+            rm = bot_instance.risk_manager
+            
+            # Calcular valor de posiciones abiertas
+            positions_value = 0
+            open_positions_list = []
+            
+            for symbol, pos in rm.open_positions.items():
+                current_value = pos['current_price'] * pos['amount']
+                positions_value += current_value
+                
+                open_positions_list.append({
+                    'symbol': symbol,
+                    'side': pos['side'],
+                    'amount': pos['amount'],
+                    'entry_price': pos['entry_price'],
+                    'current_price': pos['current_price'],
+                    'unrealized_pnl': pos.get('unrealized_pnl', 0),
+                    'pnl_percentage': (pos.get('unrealized_pnl', 0) / (pos['entry_price'] * pos['amount']) * 100) if pos['entry_price'] * pos['amount'] > 0 else 0
+                })
+            
+            # Calcular totales
+            total_value = cash_balance + positions_value
+            initial_balance = Config.INVESTMENT_AMOUNT
+            total_pnl = rm.total_pnl
+            total_pnl_percentage = (total_pnl / initial_balance * 100) if initial_balance > 0 else 0
+            
+            # Contar trades del historial
+            try:
+                import os
+                trades_file = "data/trades_history.json"
+                total_trades = 0
+                if os.path.exists(trades_file):
+                    with open(trades_file, 'r') as f:
+                        trades = json.load(f)
+                        total_trades = len(trades) if isinstance(trades, list) else 0
+            except:
+                total_trades = 0
+            
+            return {
+                'cash': cash_balance,
+                'positions_value': positions_value,
+                'total_value': total_value,
+                'initial_balance': initial_balance,
+                'total_pnl': total_pnl,
+                'total_pnl_percentage': total_pnl_percentage,
+                'daily_pnl': rm.daily_pnl,
+                'total_trades': total_trades,
+                'open_positions': len(rm.open_positions),
+                'positions_detail': open_positions_list,
+                'last_update': datetime.now().isoformat()
+            }
+        else:
+            # Fallback si el bot no está inicializado
+            return {
+                'cash': cash_balance,
+                'positions_value': 0,
+                'total_value': cash_balance,
+                'initial_balance': Config.INVESTMENT_AMOUNT,
+                'total_pnl': 0,
+                'total_pnl_percentage': 0,
+                'daily_pnl': 0,
+                'total_trades': 0,
+                'open_positions': 0,
+                'positions_detail': [],
+                'last_update': datetime.now().isoformat()
+            }
+            
     except Exception as e:
         logger.error(f"Error obteniendo portafolio: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
         from config import Config
         initial_balance = float(Config.INVESTMENT_AMOUNT)
         return {
@@ -1196,8 +1248,10 @@ async def get_portfolio():
             'initial_balance': initial_balance,
             'total_pnl': 0,
             'total_pnl_percentage': 0,
+            'daily_pnl': 0,
             'total_trades': 0,
             'open_positions': 0,
+            'positions_detail': [],
             'last_update': datetime.now().isoformat()
         }
 
