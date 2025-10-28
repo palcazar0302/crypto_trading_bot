@@ -1245,6 +1245,29 @@ async def get_performance():
         logger.error(f"Error obteniendo rendimiento: {e}")
         return {"error": str(e)}
 
+@app.get("/api/trades/history")
+async def get_trades_history():
+    """Obtener historial de trades"""
+    try:
+        import os
+        trades_file = "data/trades_history.json"
+        
+        if not os.path.exists(trades_file):
+            return []
+        
+        with open(trades_file, 'r') as f:
+            trades = json.load(f)
+        
+        # Asegurarse de que sea una lista
+        if not isinstance(trades, list):
+            return []
+        
+        return trades
+        
+    except Exception as e:
+        logger.error(f"Error obteniendo historial de trades: {e}")
+        return []
+
 @app.post("/api/bot/start")
 async def start_bot():
     """Iniciar el bot de trading"""
