@@ -755,6 +755,9 @@ async def get_dashboard():
                         <span class="metric-value ${pnlClass}">$${portfolio.total_pnl?.toFixed(2) || '0.00'} (${portfolio.total_pnl_percentage?.toFixed(2) || '0.00'}%)</span>
                     </div>
                 `;
+                
+                // 🎯 ACTUALIZAR POSICIONES ABIERTAS
+                updateOpenPositions(portfolio.positions_detail || []);
             }
             
             function updateOpenPositions(positions) {
@@ -991,43 +994,6 @@ async def get_dashboard():
                         }
                     }
                 });
-            }
-            
-            // Función para actualizar posiciones abiertas
-            function updatePositions(positions) {
-                const positionsContainer = document.getElementById('positions-list');
-                
-                if (!positions || positions.length === 0) {
-                    positionsContainer.innerHTML = '<div class="loading">No hay posiciones abiertas</div>';
-                    return;
-                }
-                
-                const positionsHTML = positions.map(position => {
-                    const pnlClass = position.pnl >= 0 ? 'positive' : 'negative';
-                    const typeClass = position.type.toLowerCase();
-                    const pnlSign = position.pnl >= 0 ? '+' : '';
-                    
-                    return `
-                        <div class="position">
-                            <div class="position-info">
-                                <div class="position-symbol">
-                                    ${position.symbol}
-                                    <span class="position-type ${typeClass}">${position.type}</span>
-                                </div>
-                                <div class="position-details">
-                                    Cantidad: ${position.quantity} | 
-                                    Precio: $${position.entry_price} → $${position.current_price} | 
-                                    Abierto: ${position.duration}
-                                </div>
-                            </div>
-                            <div class="position-pnl ${pnlClass}">
-                                ${pnlSign}${position.pnl.toFixed(2)}%
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                
-                positionsContainer.innerHTML = positionsHTML;
             }
             
             async function startBot() {
